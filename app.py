@@ -542,6 +542,102 @@ def student_register():
 
     return render_template('students/student_register.html')
 
+@app.route('/student/dashboard')
+def student_dashboard():
+
+    if "student_id" not in session:
+        return redirect('/student/login')
+
+    student_id=session["student_id"]
+
+    conn=sqlite3.connect("database.db")
+    cur=conn.cursor()
+
+    cur.execute("SELECT * FROM student WHERE id=?", (student_id,))
+    student=cur.fetchone()
+
+    cur.execute("SELECT COUNT(*) FROM application WHERE student_id=?", (student_id,))
+    total_applications = cur.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        'students/student_dashboard.html',
+        student_name=student[1],
+        total_applications=total_applications
+    )
+
+@app.route('/student/view')
+def view_drives():
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT drive.id, company.name, drive.job_title, drive.eligibility, drive.deadline
+    FROM drive
+    JOIN company ON drive.company_id = company.id
+    WHERE drive.status='Approved'
+    """)
+
+    drives = cur.fetchall()
+
+    conn.close()
+
+    return render_template('students/view_drives.html', drives=drives)
+
+@app.route('/student/apply/<int:drive_id>')
+def apply_drive(drive_id):
+
+    if "student_id" not in session:
+        return 'Please <a href="/student/login">login</a> first.'
+
+    student_id = session["student_id"]
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    
+    cur.execute("SELECT * FROM application WHERE student_id=? AND drive_id=?", (student_id, drive_id))
+    check = cur.fetchone()
+
+    if check:
+        conn.close()
+        return "You already applied for this drive."
+
+    
+    cur.execute("INSERT INTO application(student_id, drive_id, application_date, status) VALUES(?,?,DATE('now'),?)",(student_id, drive_id, "Applied"))
+
+    conn.commit()
+    conn.close()
+
+    return 'Application submitted successfully. Click <a href="/student/view">here</a> to go back.'
+
+@app.route('/student/myapplication')
+def my_application():
+
+    if "student_id" not in session:
+        return redirect('/student/login')
+
+    student_id = session["student_id"]
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT drive.job_title, company.name, application.status
+    FROM application
+    JOIN drive ON application.drive_id = drive.id
+    JOIN company ON drive.company_id = company.id
+    WHERE application.student_id = ?
+    """, (student_id,))
+
+    applications = cur.fetchall()
+
+    conn.close()
+
+    return render_template('students/my_application.html', applications=applications)
+
 
 if __name__=='__main__':
     app.run(debug=True)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br><br>
+
+<center>
+
+<h2>Student Dashboard</h2>
+
+<p><strong>Name:</strong> {{ student_name }}</p>
+<p><strong>Total Applications:</strong> {{ total_applications or 0 }}</p>
+
+<br>
+
+<a href="/student/view">View Drives</a> |
+<a href="/student/myapplication">My Applications</a> |
+<a href="/student/profile">My Profile</a>
+
+</center>
+<div>
+    <center>
+        <a href="/">Back</a>
+    </center>
+</div>
+
+
+</body>
+</html>

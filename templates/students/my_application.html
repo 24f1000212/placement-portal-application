@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Applications</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br>
+
+<h2 style="text-align:center;">My Applications</h2>
+
+<table border="1" align="center" cellpadding="10">
+
+<tr>
+    <th>Drive</th>
+    <th>Company</th>
+    <th>Status</th>
+</tr>
+
+{% for app in applications %}
+<tr>
+    <td>{{ app[0] }}</td>
+    <td>{{ app[1] }}</td>
+    <td>{{ app[2] }}</td>
+</tr>
+{% else %}
+<tr>
+    <td colspan="3" align="center">No applications yet</td>
+</tr>
+{% endfor %}
+
+</table>
+<div>
+    <center>
+        <a href="/student/dashboard">Back</a>
+    </center>
+</div>
+
+</body>
+</html>
