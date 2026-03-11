@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Students</title>
+</head>
+<body>
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+<h2 style="text-align:center;">Manage Students</h2>
+
+<table border="1" align="center" cellpadding="10">
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for student in students %}
+
+<tr>
+<td>{{ student[0] }}</td>
+<td>{{ student[1] }}</td>
+<td>{{ student[2] }}</td>
+<td>{{ student[4] }}</td>
+<td>{{ student[6] }}</td>
+
+<td>
+<a href="/admin/approve_student/{{ student[0] }}">Approve</a>
+</td>
+
+<td>
+<a href="/admin/reject_student/{{ student[0] }}">Reject</a>
+</td>
+
+<td>
+<a href="/admin/delete_student/{{ student[0] }}">Delete</a>
+</td>
+
+</tr>
+<tr>
+    <td colspan="5" align="center">No students found</td>
+</tr>
+{% endfor %}
+
+</table>
+<div>
+    <center>
+        <a href='/admin/dashboard'>Back</a>
+    </center>
+</div>
+</body>
+</html>

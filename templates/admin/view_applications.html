@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Applications</title>
+</head>
+<body>
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+<h2 style="text-align:center;">All Applications</h2>
+
+<table border="1" align="center" cellpadding="10">
+
+<tr>
+    <th>Student ID</th>
+    <th>Drive ID</th>
+    <th>Status</th>
+</tr>
+
+{% for app in applications %}
+<tr>
+    <td>{{ app.student_id }}</td>
+    <td>{{ app.drive_id }}</td>
+    <td>{{ app.status }}</td>
+</tr>
+{% else %}
+<tr>
+    <td colspan="3" align="center">No applications found</td>
+</tr>
+{% endfor %}
+
+</table>
+<div>
+    <center>
+        <a href="/admin/dashboard">Back</a>
+    </center>
+</div>
+</body>
+</html>

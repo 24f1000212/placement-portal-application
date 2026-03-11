@@ -29,7 +29,251 @@ def index():
 def admin_login():
     return render_template('admin/admin_login.html')
 
+@app.route('/admin/dashboard', methods=["GET","POST"])
+def admin_dashboard():
 
+    email="abc@gmail.com"
+    password="123"
+
+    if request.method=="POST":
+
+        if email==request.form["email"] and password==request.form["password"]:
+
+            session["admin"] = "admin"
+
+        else:
+            return 'incorrect password or username. click <a href="/admin/login">here</a> to go back'
+
+    if "admin" not in session:
+        return redirect("/admin/login")
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM student")
+    total_students = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM company")
+    total_companies = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM drive")
+    total_drives = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM application")
+    total_applications = cur.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        "admin/admin_dashboard.html",
+        total_students=total_students,
+        total_companies=total_companies,
+        total_drives=total_drives,
+        total_applications=total_applications
+    )
+
+@app.route('/admin/manages')
+def manage_students():
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM student WHERE status!='Deleted'")
+    students = cur.fetchall()
+
+    conn.close()
+
+    return render_template('admin/manage_student.html', students=students)
+
+@app.route('/admin/managec')
+def manage_companies():
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM company WHERE status!='Deleted'")
+    companies = cur.fetchall()
+
+    conn.close()
+
+    return render_template('admin/manage_companies.html', companies=companies)
+
+@app.route('/admin/managed')
+def manage_drives():
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM drive")
+    drives = cur.fetchall()
+
+    conn.close()
+
+    return render_template('admin/manage_Drive.html', drives=drives)
+
+@app.route('/admin/view')
+def view_application():
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT student.name, company.name, drive.job_title, application.status
+    FROM application
+    JOIN student ON application.student_id = student.id
+    JOIN drive ON application.drive_id = drive.id
+    JOIN company ON drive.company_id = company.id
+    """)
+
+    applications = cur.fetchall()
+
+    conn.close()
+
+    return render_template('admin/view_applications.html', applications=applications)
+
+@app.route('/admin/search', methods=["GET"])
+def admin_search():
+
+    query = request.args.get("query")
+
+    students = []
+    companies = []
+
+    if query:
+
+        conn = sqlite3.connect("database.db")
+        cur = conn.cursor()
+
+        cur.execute("SELECT * FROM student WHERE name LIKE ?", ('%'+query+'%',))
+        students = cur.fetchall()
+
+        cur.execute("SELECT * FROM company WHERE name LIKE ?", ('%'+query+'%',))
+        companies = cur.fetchall()
+
+        conn.close()
+
+    return render_template(
+        "admin/admin_Search.html",
+        students=students,
+        companies=companies
+    )
+
+@app.route('/admin/approve_company/<int:company_id>')
+def approve_company(company_id):
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE company SET status='Approved' WHERE id=?", (company_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managec')
+
+@app.route('/admin/approve_student/<int:student_id>')
+def approve_student(student_id):
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE student SET status='Approved' WHERE id=?", (student_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/manages')
+
+@app.route('/admin/approve_drive/<int:drive_id>')
+def approve_drive(drive_id):
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE drive SET status='Approved' WHERE id=?", (drive_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managed')
+
+@app.route('/admin/reject_student/<int:student_id>')
+def reject_student(student_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE student SET status='Rejected' WHERE id=?", (student_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/manages')
+
+@app.route('/admin/reject_company/<int:company_id>')
+def reject_company(company_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE company SET status='Rejected' WHERE id=?", (company_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managec')
+
+@app.route('/admin/reject_drive/<int:drive_id>')
+def reject_drive(drive_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE drive SET status='Rejected' WHERE id=?", (drive_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managed')
+
+@app.route('/admin/delete_student/<int:student_id>')
+def delete_student(student_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE student SET status='Deleted' WHERE id=?", (student_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/manages')
+
+@app.route('/admin/delete_company/<int:company_id>')
+def delete_company(company_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE company SET status='Deleted' WHERE id=?", (company_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managec')
+
+@app.route('/admin/delete_drive/<int:drive_id>')
+def delete_drive(drive_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM drive WHERE id=?", (drive_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin/managed')
 
 
 #Companies

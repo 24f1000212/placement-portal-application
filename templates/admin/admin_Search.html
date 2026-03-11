@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search</title>
+</head>
+<body>
+    <div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<h2 style="text-align:center;">Search Students / Companies</h2>
+
+<center>
+<form method="GET" action="/admin/search">
+    <input type="text" name="query" placeholder="Enter Name or ID">
+    <input type="submit" value="Search">
+</form>
+</center>
+
+<br>
+
+<h3>Students</h3>
+
+{% for s in students %}
+<p>{{ s[1] }} - {{ s[2] }}</p>
+{% endfor %}
+
+<h3>Companies</h3>
+
+{% for c in companies %}
+<p>{{ c[1] }} - {{ c[2] }}</p>
+{% endfor %}
+<div>
+    <center>
+        <a href="/admin/dashboard">Back</a>
+    </center>
+</div>
+</body>
+</html>

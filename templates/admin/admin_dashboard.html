@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin dashboard</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+<div style="text-align:center;"><h1>Admin Dashboard</h1> </div>
+
+<br><br>
+
+<div style="display:flex; justify-content:center; gap:40px;">
+
+    <div style="border:2px solid black; width:150px; height:100px; text-align:center;">
+        <h4>Total Students</h4>
+        <h2>{{ total_students or 0 }}</h2>
+    </div>
+
+    <div style="border:2px solid black; width:150px; height:100px; text-align:center;">
+        <h4>Total Companies</h4>
+        <h2>{{ total_companies or 0 }}</h2>
+    </div>
+
+    <div style="border:2px solid black; width:150px; height:100px; text-align:center;">
+        <h4>Total Drives</h4>
+        <h2>{{ total_drives or 0 }}</h2>
+    </div>
+
+    <div style="border:2px solid black; width:150px; height:100px; text-align:center;">
+        <h4>Total Applications</h4>
+        <h2>{{ total_applications or 0 }}</h2>
+    </div>
+
+</div>
+
+<br><br>
+
+<div style="text-align:center;">
+    <a href="/admin/manages">Manage Students</a> |
+    <a href="/admin/managec">Manage Companies</a> |
+    <a href="/admin/managed">Manage Drives</a>  |
+    <a href="/admin/search">Search</a>
+</div>
+<div>
+    <center>
+        <a href="/">Back</a>
+    </center>
+</div>
+</body>
+</html>

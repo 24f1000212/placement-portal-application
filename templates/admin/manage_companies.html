@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Companies</title>
+</head>
+<body>
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+<h2 style="text-align:center;">Manage Companies</h2>
+
+<table border="1" align="center" cellpadding="10">
+
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for company in companies %}
+<tr>
+<td>{{ company[0] }}</td>
+<td>{{ company[1] }}</td>
+<td>{{ company[2] }}</td>
+<td>{{ company[7] }}</td>
+
+<td>
+<a href="/admin/approve_company/{{ company[0] }}">Approve</a>
+<a href="/admin/reject_company/{{ company[0] }}">Reject</a>
+<a href="/admin/delete_company/{{ company[0] }}">Delete</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+<div>
+    <center>
+        <a href="/admin/dashboard">Back</a>
+    </center>
+</div>
+</body>
+</html>
