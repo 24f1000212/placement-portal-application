@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Drives</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br>
+
+<h2 style="text-align:center;">Manage Your Drives</h2>
+
+<table border="1" align="center" cellpadding="10">
+
+<tr>
+    <th>ID</th>
+    <th>Job Title</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for drive in drives %} 
+<tr>
+    <td>{{ drive[0] }}</td>
+    <td>{{ drive[2] }}</td>
+    <td>{{ drive[6] }}</td>
+    <td>
+        <a href="/company/edit_drive/{{ drive[0] }}">Edit</a> |
+        <a href="/company/close_drive/{{ drive[0] }}">Close</a> |
+        <a href="/company/delete_drive/{{ drive[0] }}">Delete</a>
+    </td>
+</tr>
+{% else %}
+<tr>
+    <td colspan="4" align="center">No drives created</td>
+</tr>
+{% endfor %}
+
+</table>
+<div>
+    <center>
+        <a href="/company/dashboard">Back</a>
+    </center>
+</div>
+</body>
+</html>

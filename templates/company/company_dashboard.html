@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Dashboard</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br><br>
+
+<center>
+<h2>Company Dashboard</h2>
+
+<p><strong>Company Name:</strong> {{ company_name }}</p>
+<p><strong>Total Drives Created:</strong> {{ total_drives or 0 }}</p>
+
+<br>
+
+<a href="/company/createdrive">Create Drive</a> | |
+<a href="/company/view">View Applications</a> |
+<a href="/company/profile">Profile</a>
+
+</center>
+<div>
+    <center>
+        <a href="/">Back</a>
+    </center>
+</div>
+</body>
+</html>

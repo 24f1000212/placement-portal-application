@@ -358,7 +358,120 @@ def company_login():
 
     return render_template('company/company_login.html')
 
+@app.route('/company/dashboard',methods=["GET","POST"])
+def company_dashboard ():
+    company_id = session["company_id"]
 
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM company WHERE id=?", (company_id,))
+    company = cur.fetchone()
+
+    cur.execute("SELECT COUNT(*) FROM drive WHERE company_id=?", (company_id,))
+    total_drives = cur.fetchone()[0]
+
+    conn.close()
+    #email="abc@gmail.com"
+    #password="123"
+    #if email==request.form["email"] and password==request.form["password"]:
+    return render_template('company/company_dashboard.html', company_name=company[1], total_drives=total_drives)
+    #else:
+     #   return 'incorrect password or username. click <a href="/company/login">here</a> to go back'
+        
+
+
+@app.route('/company/createdrive',methods=["GET","POST"])
+def create_drive ():
+    if request.method=="POST":
+        job_title=request.form["job_title"]
+        description=request.form["description"]
+        eligibility=request.form["eligibility"]
+        deadline=request.form["deadline"]
+
+        company_id = session["company_id"]
+
+        conn=sqlite3.connect("database.db", timeout=10)
+        cur=conn.cursor()
+        cur.execute( "INSERT INTO drive(company_id,job_title,description,eligibility,deadline,status) VALUES(?,?,?,?,?,?)", (company_id,job_title,description,eligibility,deadline,"Pending")
+)
+        conn.commit()
+        conn.close()
+        return 'Your Drive created successfully. please, click <a href="/company/dashboard">here</a> to go your dashboard.'
+        
+    return render_template('company/create_drive.html')
+
+@app.route('/company/managedrive')
+def company_manage_drives():
+    company_id=session["company_id"]
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM drive WHERE company_id=?", (company_id)) 
+    drives = cur.fetchall()
+    conn.close()
+
+    return render_template("company/manage_drives.html", drives=drives)
+
+
+@app.route('/company/view')
+def view_applications():
+    company_id = session["company_id"]
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT application.id, student.name, drive.job_title, application.status
+    FROM application
+    JOIN student ON application.student_id = student.id
+    JOIN drive ON application.drive_id = drive.id
+    WHERE drive.company_id = ?
+    """, (company_id,))
+
+    applications = cur.fetchall()
+
+    conn.close()
+    return render_template('company/view_applications.html', applications=applications)
+
+@app.route('/company/shortlist/<int:app_id>')
+def shortlist_student(app_id):
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE application SET status=? WHERE id=?", ("Shortlisted", app_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/company/view')
+
+@app.route('/company/select/<int:app_id>')
+def select_student(app_id):
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("UPDATE application SET status=? WHERE id=?", ("Selected", app_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/company/view')
+
+@app.route('/company/reject/<int:app_id>')
+def company_reject_application(app_id):
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    cur.execute("UPDATE application SET status=? WHERE id=?", ("Rejected", app_id))
+
+    conn.commit()
+    conn.close()
+
+    return redirect('/company/view')
 
 #student
 
