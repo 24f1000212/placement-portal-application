@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Register</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br><br>
+
+<center>
+<div style="border:2px solid black; width:400px; padding:30px; background-color:beige;">
+
+    <h2>Company Registration</h2>
+
+    <form method="POST" action="/company/register" style="line-height:30px;">
+
+        Company Name:<br>
+        <input type="text" name="name" required><br>
+
+        Email:<br>
+        <input type="email" name="email" required><br>
+
+        Password:<br>
+        <input type="password" name="password" required><br>
+
+        HR Contact:<br>
+        <input type="text" name="hr_contact"><br>
+
+        Website:<br>
+        <input type="text" name="website"><br><br>
+
+        <input type="submit" value="Register">
+
+    </form>
+
+</div>
+</center>
+<div>
+    <center>
+        <h3>If you already registered. please click here to<a href="/company/login">login</a></h3>
+    </center>
+</div>
+<div>
+    <center>
+        <a href="/">Back</a>
+    </center>
+</div>
+</body>
+</html>
