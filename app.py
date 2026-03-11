@@ -434,6 +434,30 @@ def view_applications():
     conn.close()
     return render_template('company/view_applications.html', applications=applications)
 
+@app.route('/company/profile')
+def company_profile():
+    if "company_id" not in session:
+        return 'Please <a href="/company/login">login</a> first.'
+    company_id = session["company_id"]
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM company WHERE id=?", (company_id,))
+    company = cur.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "company/company_profile.html",
+        company_name = company[1],
+        company_email = company[2],
+        company_hr_contact = company[4],
+        company_website = company[5],
+        company_approval_status = company[6]
+    )
+
+
 @app.route('/company/shortlist/<int:app_id>')
 def shortlist_student(app_id):
 
@@ -472,6 +496,42 @@ def company_reject_application(app_id):
     conn.close()
 
     return redirect('/company/view')
+
+@app.route('/company/edit_profile', methods=["GET","POST"])
+def edit_company_profile():
+
+    if "company_id" not in session:
+        return redirect('/company/login')
+
+    company_id = session["company_id"]
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        email = request.form["email"]
+        hr_contact = request.form["hr_contact"]
+        website = request.form["website"]
+
+        cur.execute("""
+        UPDATE company
+        SET name=?, email=?, hr_contact=?, website=?
+        WHERE id=?
+        """,(name,email,hr_contact,website,company_id))
+
+        conn.commit()
+
+        return redirect('/company/profile')
+
+    cur.execute("SELECT * FROM company WHERE id=?", (company_id,))
+    company = cur.fetchone()
+
+    conn.close()
+
+    return render_template( "company/edit_company_profile.html", company=company )
+    
 
 #student
 
@@ -567,6 +627,29 @@ def student_dashboard():
         total_applications=total_applications
     )
 
+@app.route('/student/profile')
+def student_profile():
+    if "student_id" not in session:
+        return 'Please <a href="/student/login">login</a> first.'
+
+    student_id = session["student_id"]
+
+    conn = sqlite3.connect("database.db", timeout=10)
+    cur = conn.cursor()
+
+    cur.execute("SELECT name,email,phone,resume FROM student WHERE id=?", (student_id,))
+    student = cur.fetchone()
+
+    conn.close()
+
+    return render_template(
+    'students/student_profile.html',
+    student_name = student[0],
+    student_email = student[1],
+    student_phone = student[2],
+    student_resume = student[3]
+)
+    
 @app.route('/student/view')
 def view_drives():
 
@@ -637,6 +720,43 @@ def my_application():
     conn.close()
 
     return render_template('students/my_application.html', applications=applications)
+
+@app.route('/student/edit_profile', methods=["GET","POST"])
+def edit_student_profile():
+
+    if "student_id" not in session:
+        return redirect('/student/login')
+
+    student_id = session["student_id"]
+
+    conn = sqlite3.connect("database.db")
+    cur = conn.cursor()
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        email = request.form["email"]
+        phone = request.form["phone"]
+
+        cur.execute("""
+        UPDATE student
+        SET name=?, email=?, phone=?
+        WHERE id=?
+        """,(name,email,phone,student_id))
+
+        conn.commit()
+
+        return redirect('/student/profile')
+
+    cur.execute("SELECT * FROM student WHERE id=?", (student_id,))
+    student = cur.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "students/edit_student_profile.html",
+        student=student
+    )
 
 
 if __name__=='__main__':

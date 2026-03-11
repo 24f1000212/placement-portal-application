@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Profile</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; text-align:center; display:flex; justify-content:center; align-items:center;">
+    <h1>Placement Portal Application</h1>
+</div>
+
+<br><br>
+
+<center>
+
+<h2>My Profile</h2>
+
+<p><strong>Name:</strong> {{ student_name }}</p>
+<p><strong>Email:</strong> {{ student_email }}</p>
+<p><strong>Phone:</strong> {{ student_phone }}</p>
+
+{% if student_resume %}
+<p><strong>Resume:</strong> <a href="/static/uploads/{{ student_resume }}">View Resume</a></p>
+{% else %}
+<p>No resume uploaded</p>
+{% endif %}
+
+<br>
+
+<a href="/student/edit_profile">Edit Profile</a>
+
+</center>
+<div>
+    <center>
+        <a href="/student/dashboard">Back</a>
+    </center>
+</div>
+</body>
+</html>

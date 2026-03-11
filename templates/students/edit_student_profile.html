@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Student Profile</title>
+</head>
+<body>
+
+<div style="background-color:rgb(62,225,225); height:100px; display:flex; justify-content:center; align-items:center;">
+<h1>Placement Portal Application</h1>
+</div>
+
+<br><br>
+
+<center>
+
+<h2>Edit Profile</h2>
+
+<form method="POST">
+
+Name:<br>
+<input type="text" name="name" value="{{ student[1] }}"><br>
+
+Email:<br>
+<input type="email" name="email" value="{{ student[2] }}"><br>
+
+Phone:<br>
+<input type="text" name="phone" value="{{ student[4] }}"><br><br>
+
+<input type="submit" value="Update">
+
+</form>
+
+<br>
+<a href="/student/profile">Back</a>
+
+</center>
+
+</body>
+</html>
